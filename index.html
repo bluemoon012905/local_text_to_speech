@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Text-to-Speech</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <h1>Local Text-to-Speech</h1>
+        <input type="file" id="file-input" accept=".txt,.pdf">
+        <div id="text-display"></div>
+        <div id="controls">
+            <button id="read-button">Read Aloud</button>
+            <button id="bookmark-button">Bookmark</button>
+            <input type="range" id="progress-bar" min="0" max="100" value="0">
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
