@@ -18,3 +18,10 @@ A simple, locally-run application to read text from PDF and TXT files aloud.
 *   **Frontend:** HTML, CSS, JavaScript
 *   **Text-to-Speech:** Browser's built-in `SpeechSynthesis` API
 *   **PDF Handling:** `pdf.js` library to extract text from PDF files.
+
+## How to Use
+
+1.  Clone this repository.
+2.  Open the `index.html` file in your web browser.
+3.  Click the "Choose File" button to select a `.txt` or `.pdf` file.
+4.  The text will be displayed, and you can use the controls to have it read to you.
