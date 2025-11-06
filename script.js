@@ -1,6 +1,7 @@
 const fileInput = document.getElementById('file-input');
 const textDisplay = document.getElementById('text-display');
 const readButton = document.getElementById('read-button');
+const syncButton = document.getElementById('sync-button');
 const bookmarkButton = document.getElementById('bookmark-button');
 const progressBar = document.getElementById('progress-bar');
 
@@ -53,30 +54,54 @@ function paginateText(text) {
     for (let i = 0; i < words.length; i += WORDS_PER_PAGE) {
         pages.push(words.slice(i, i + WORDS_PER_PAGE).join(' '));
     }
-    progressBar.max = pages.length - 1;
+    progressBar.max = pages.length > 0 ? pages.length - 1 : 0;
     loadBookmark();
 }
 
 function displayPage(pageNumber) {
-    textDisplay.innerHTML = '';
-    const p = document.createElement('p');
-    p.textContent = pages[pageNumber];
-    textDisplay.appendChild(p);
-    progressBar.value = pageNumber;
+    if (pageNumber >= 0 && pageNumber < pages.length) {
+        textDisplay.innerHTML = '';
+        const p = document.createElement('p');
+        p.textContent = pages[pageNumber];
+        textDisplay.appendChild(p);
+        progressBar.value = pageNumber;
+        currentPage = pageNumber;
+    }
 }
 
 progressBar.addEventListener('input', (event) => {
-    currentPage = parseInt(event.target.value, 10);
-    displayPage(currentPage);
+    const newPage = parseInt(event.target.value, 10);
+    displayPage(newPage);
 });
+
+function readPage(pageNumber) {
+    if (pageNumber >= 0 && pageNumber < pages.length) {
+        speechSynthesis.cancel();
+        const textToRead = pages[pageNumber];
+        const utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.onend = () => {
+            if (currentPage < pages.length - 1) {
+                const newPage = currentPage + 1;
+                displayPage(newPage);
+                readPage(newPage);
+            }
+        };
+        speechSynthesis.speak(utterance);
+    }
+}
 
 readButton.addEventListener('click', () => {
     const selectedText = window.getSelection().toString();
-    const textToRead = selectedText || pages[currentPage];
-    if (textToRead) {
-        const utterance = new SpeechSynthesisUtterance(textToRead);
+    if (selectedText) {
+        const utterance = new SpeechSynthesisUtterance(selectedText);
         speechSynthesis.speak(utterance);
+    } else {
+        readPage(currentPage);
     }
+});
+
+syncButton.addEventListener('click', () => {
+    readPage(currentPage);
 });
 
 bookmarkButton.addEventListener('click', () => {
@@ -87,5 +112,6 @@ function loadBookmark() {
     const bookmark = localStorage.getItem('bookmark');
     if (bookmark) {
         currentPage = parseInt(bookmark, 10);
+        displayPage(currentPage);
     }
 }
