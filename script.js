@@ -32,7 +32,19 @@ fileInput.addEventListener('change', (event) => {
                     for (let i = 1; i <= numPages; i++) {
                         promises.push(pdf.getPage(i).then(page => {
                             return page.getTextContent().then(content => {
-                                return content.items.map(item => item.str).join(' ');
+                                let lastY = -1;
+                                let textLine = '';
+                                let pageText = '';
+                                for (const item of content.items) {
+                                    if (lastY !== -1 && item.transform[5] !== lastY) {
+                                        pageText += textLine + '\n';
+                                        textLine = '';
+                                    }
+                                    textLine += item.str;
+                                    lastY = item.transform[5];
+                                }
+                                pageText += textLine;
+                                return pageText;
                             });
                         }));
                     }
