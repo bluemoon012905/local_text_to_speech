@@ -2,8 +2,8 @@ const fileInput = document.getElementById('file-input');
 const textDisplay = document.getElementById('text-display');
 const readButton = document.getElementById('read-button');
 const syncButton = document.getElementById('sync-button');
-const bookmarkButton = document.getElementById('bookmark-button');
 const progressBar = document.getElementById('progress-bar');
+const speedDial = document.getElementById('speed-dial');
 
 let fullText = '';
 let pages = [];
@@ -11,6 +11,7 @@ let currentPage = 0;
 const WORDS_PER_PAGE = 300;
 
 fileInput.addEventListener('change', (event) => {
+    currentPage = 0;
     const file = event.target.files[0];
     if (file) {
         if (file.type === 'text/plain') {
@@ -67,7 +68,6 @@ function paginateText(text) {
         pages.push(words.slice(i, i + WORDS_PER_PAGE).join(' '));
     }
     progressBar.max = pages.length > 0 ? pages.length - 1 : 0;
-    loadBookmark();
 }
 
 function displayPage(pageNumber) {
@@ -82,6 +82,7 @@ function displayPage(pageNumber) {
 }
 
 progressBar.addEventListener('input', (event) => {
+    speechSynthesis.cancel();
     const newPage = parseInt(event.target.value, 10);
     displayPage(newPage);
 });
@@ -91,6 +92,7 @@ function readPage(pageNumber) {
         speechSynthesis.cancel();
         const textToRead = pages[pageNumber];
         const utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.rate = speedDial.value;
         utterance.onend = () => {
             if (currentPage < pages.length - 1) {
                 const newPage = currentPage + 1;
@@ -106,6 +108,7 @@ readButton.addEventListener('click', () => {
     const selectedText = window.getSelection().toString();
     if (selectedText) {
         const utterance = new SpeechSynthesisUtterance(selectedText);
+        utterance.rate = speedDial.value;
         speechSynthesis.speak(utterance);
     } else {
         readPage(currentPage);
@@ -115,15 +118,3 @@ readButton.addEventListener('click', () => {
 syncButton.addEventListener('click', () => {
     readPage(currentPage);
 });
-
-bookmarkButton.addEventListener('click', () => {
-    localStorage.setItem('bookmark', currentPage);
-});
-
-function loadBookmark() {
-    const bookmark = localStorage.getItem('bookmark');
-    if (bookmark) {
-        currentPage = parseInt(bookmark, 10);
-        displayPage(currentPage);
-    }
-}
