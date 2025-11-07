@@ -46,3 +46,7 @@ body {
 #voice-options, #ai-voice-options {
     margin-top: 20px;
 }
+
+#openai-api-key {
+    margin-bottom: 10px;
+}

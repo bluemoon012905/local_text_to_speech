@@ -8,6 +8,7 @@ const speedDial = document.getElementById('speed-dial');
 const speedValue = document.getElementById('speed-value');
 const voiceSelect = document.getElementById('voice-select');
 const aiReadButton = document.getElementById('ai-read-button');
+const openAIApiKeyInput = document.getElementById('openai-api-key');
 
 let fullText = '';
 let pages = [];
@@ -19,6 +20,12 @@ const WORDS_PER_PAGE = 300;
 function populateVoiceList() {
     voices = speechSynthesis.getVoices();
     voiceSelect.innerHTML = '';
+    if (voices.length === 0) {
+        const option = document.createElement('option');
+        option.textContent = 'No voices available';
+        voiceSelect.appendChild(option);
+        return;
+    }
     for (const voice of voices) {
         const option = document.createElement('option');
         option.textContent = `${voice.name} (${voice.lang})`;
@@ -28,10 +35,11 @@ function populateVoiceList() {
     }
 }
 
-populateVoiceList();
+voiceSelect.innerHTML = '<option>Loading voices...</option>';
 if (speechSynthesis.onvoiceschanged !== undefined) {
     speechSynthesis.onvoiceschanged = populateVoiceList;
 }
+speechSynthesis.getVoices();
 
 fileInput.addEventListener('change', (event) => {
     currentPage = 0;
@@ -169,8 +177,54 @@ speedDial.addEventListener('input', () => {
     }
 });
 
-aiReadButton.addEventListener('click', () => {
-    // Placeholder for OpenAI TTS functionality
-    console.log('AI Read Button clicked. OpenAI TTS not implemented yet.');
-    alert('OpenAI TTS functionality is not implemented yet.');
+aiReadButton.addEventListener('click', async () => {
+    const apiKey = openAIApiKeyInput.value.trim();
+    if (!apiKey) {
+        alert('Please enter your OpenAI API key.');
+        return;
+    }
+
+    const textToRead = pages[currentPage];
+    if (!textToRead) {
+        alert('No text to read.');
+        return;
+    }
+
+    aiReadButton.disabled = true;
+    aiReadButton.textContent = 'Reading...';
+
+    try {
+        const response = await fetch('https://api.openai.com/v1/audio/speech', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: 'tts-1',
+                input: textToRead,
+                voice: 'alloy',
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`OpenAI API error: ${response.statusText}`);
+        }
+
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        audio.play();
+
+        audio.onended = () => {
+            aiReadButton.disabled = false;
+            aiReadButton.textContent = 'Read with AI Voice';
+        };
+
+    } catch (error) {
+        console.error('Error with OpenAI TTS:', error);
+        alert(`An error occurred: ${error.message}`);
+        aiReadButton.disabled = false;
+        aiReadButton.textContent = 'Read with AI Voice';
+    }
 });

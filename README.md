@@ -15,6 +15,7 @@ A simple, locally-run application to read text from PDF and TXT files aloud.
     *   Includes an adjustable progress bar to navigate through the text.
     *   Adjustable reading speed (0.5x to 4x).
 *   **Bookmarking:** Save your reading position to resume later.
+*   **AI Voice:** Use OpenAI's text-to-speech API for a high-quality voice. Requires an OpenAI API key.
 
 ## Tech Stack
 
