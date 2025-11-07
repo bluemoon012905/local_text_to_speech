@@ -29,7 +29,7 @@ body {
     align-items: center;
 }
 
-#read-button, #bookmark-button {
+#read-button, #bookmark-button, #pause-button {
     padding: 10px 20px;
     border: none;
     background-color: #007bff;

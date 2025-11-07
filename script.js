@@ -1,6 +1,7 @@
 const fileInput = document.getElementById('file-input');
 const textDisplay = document.getElementById('text-display');
 const readButton = document.getElementById('read-button');
+const pauseButton = document.getElementById('pause-button');
 const syncButton = document.getElementById('sync-button');
 const progressBar = document.getElementById('progress-bar');
 const speedDial = document.getElementById('speed-dial');
@@ -8,6 +9,7 @@ const speedDial = document.getElementById('speed-dial');
 let fullText = '';
 let pages = [];
 let currentPage = 0;
+let isPaused = false;
 const WORDS_PER_PAGE = 300;
 
 fileInput.addEventListener('change', (event) => {
@@ -90,6 +92,8 @@ progressBar.addEventListener('input', (event) => {
 function readPage(pageNumber) {
     if (pageNumber >= 0 && pageNumber < pages.length) {
         speechSynthesis.cancel();
+        isPaused = false;
+        pauseButton.textContent = 'Pause';
         const textToRead = pages[pageNumber];
         const utterance = new SpeechSynthesisUtterance(textToRead);
         utterance.rate = speedDial.value;
@@ -112,6 +116,20 @@ readButton.addEventListener('click', () => {
         speechSynthesis.speak(utterance);
     } else {
         readPage(currentPage);
+    }
+    isPaused = false;
+    pauseButton.textContent = 'Pause';
+});
+
+pauseButton.addEventListener('click', () => {
+    if (speechSynthesis.speaking && !isPaused) {
+        speechSynthesis.pause();
+        isPaused = true;
+        pauseButton.textContent = 'Resume';
+    } else if (speechSynthesis.speaking && isPaused) {
+        speechSynthesis.resume();
+        isPaused = false;
+        pauseButton.textContent = 'Pause';
     }
 });
 
