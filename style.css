@@ -53,6 +53,23 @@ body {
     width: 100%;
 }
 
+.speed-dial-box {
+    border: 1px solid #808080;
+    border-radius: 8px;
+    padding: 10px;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+#progress-bar::-webkit-slider-runnable-track {
+    background: #ff0000;
+}
+
+#progress-bar::-moz-range-track {
+    background: #ff0000;
+}
+
 #voice-options, #ai-voice-options {
     margin-top: 20px;
 }
