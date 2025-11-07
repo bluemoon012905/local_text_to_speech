@@ -5,6 +5,7 @@ const pauseButton = document.getElementById('pause-button');
 const syncButton = document.getElementById('sync-button');
 const progressBar = document.getElementById('progress-bar');
 const speedDial = document.getElementById('speed-dial');
+const speedValue = document.getElementById('speed-value');
 
 let fullText = '';
 let pages = [];
@@ -138,6 +139,7 @@ syncButton.addEventListener('click', () => {
 });
 
 speedDial.addEventListener('input', () => {
+    speedValue.textContent = `${parseFloat(speedDial.value).toFixed(1)}x`;
     if (speechSynthesis.speaking) {
         readPage(currentPage);
     }
