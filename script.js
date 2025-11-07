@@ -136,3 +136,9 @@ pauseButton.addEventListener('click', () => {
 syncButton.addEventListener('click', () => {
     readPage(currentPage);
 });
+
+speedDial.addEventListener('input', () => {
+    if (speechSynthesis.speaking) {
+        readPage(currentPage);
+    }
+});
