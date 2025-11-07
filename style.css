@@ -42,3 +42,7 @@ body {
 #progress-bar {
     width: 100%;
 }
+
+#voice-options, #ai-voice-options {
+    margin-top: 20px;
+}

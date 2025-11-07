@@ -6,12 +6,32 @@ const syncButton = document.getElementById('sync-button');
 const progressBar = document.getElementById('progress-bar');
 const speedDial = document.getElementById('speed-dial');
 const speedValue = document.getElementById('speed-value');
+const voiceSelect = document.getElementById('voice-select');
+const aiReadButton = document.getElementById('ai-read-button');
 
 let fullText = '';
 let pages = [];
 let currentPage = 0;
 let isPaused = false;
+let voices = [];
 const WORDS_PER_PAGE = 300;
+
+function populateVoiceList() {
+    voices = speechSynthesis.getVoices();
+    voiceSelect.innerHTML = '';
+    for (const voice of voices) {
+        const option = document.createElement('option');
+        option.textContent = `${voice.name} (${voice.lang})`;
+        option.setAttribute('data-lang', voice.lang);
+        option.setAttribute('data-name', voice.name);
+        voiceSelect.appendChild(option);
+    }
+}
+
+populateVoiceList();
+if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = populateVoiceList;
+}
 
 fileInput.addEventListener('change', (event) => {
     currentPage = 0;
@@ -97,6 +117,8 @@ function readPage(pageNumber) {
         pauseButton.textContent = 'Pause';
         const textToRead = pages[pageNumber];
         const utterance = new SpeechSynthesisUtterance(textToRead);
+        const selectedVoiceName = voiceSelect.selectedOptions[0].getAttribute('data-name');
+        utterance.voice = voices.find(voice => voice.name === selectedVoiceName);
         utterance.rate = speedDial.value;
         utterance.onend = () => {
             if (currentPage < pages.length - 1) {
@@ -113,6 +135,8 @@ readButton.addEventListener('click', () => {
     const selectedText = window.getSelection().toString();
     if (selectedText) {
         const utterance = new SpeechSynthesisUtterance(selectedText);
+        const selectedVoiceName = voiceSelect.selectedOptions[0].getAttribute('data-name');
+        utterance.voice = voices.find(voice => voice.name === selectedVoiceName);
         utterance.rate = speedDial.value;
         speechSynthesis.speak(utterance);
     } else {
@@ -143,4 +167,10 @@ speedDial.addEventListener('input', () => {
     if (speechSynthesis.speaking) {
         readPage(currentPage);
     }
+});
+
+aiReadButton.addEventListener('click', () => {
+    // Placeholder for OpenAI TTS functionality
+    console.log('AI Read Button clicked. OpenAI TTS not implemented yet.');
+    alert('OpenAI TTS functionality is not implemented yet.');
 });
