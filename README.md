@@ -12,7 +12,7 @@ A simple, locally-run application to read text from PDF and TXT files aloud.
 *   **Reading Progress:**
     *   Displays text in paginated sections, like a book.
     *   Includes an adjustable progress bar to navigate through the text.
-    *   Adjustable reading speed.
+    *   Adjustable reading speed (0.5x to 4x).
 *   **Bookmarking:** Save your reading position to resume later.
 
 ## Tech Stack
