@@ -24,6 +24,14 @@ body {
     border: 1px solid #808080;
     padding: 10px;
     margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+.boxed {
+    border: 1px solid #808080;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
 }
 
 #controls {
