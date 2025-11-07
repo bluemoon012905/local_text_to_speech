@@ -63,11 +63,34 @@ body {
 }
 
 #progress-bar::-webkit-slider-runnable-track {
-    background: #ff0000;
+    background: #c0392b;
+    height: 5px;
+    border-radius: 3px;
 }
 
 #progress-bar::-moz-range-track {
-    background: #ff0000;
+    background: #c0392b;
+    height: 5px;
+    border-radius: 3px;
+}
+
+#progress-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -5px;
+}
+
+#progress-bar::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 #voice-options, #ai-voice-options {
