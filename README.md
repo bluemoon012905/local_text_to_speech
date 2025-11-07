@@ -8,6 +8,7 @@ A simple, locally-run application to read text from PDF and TXT files aloud.
 *   **File Support:** Supports both `.pdf` and `.txt` files.
 *   **PDF Text Extraction:** Automatically extracts text from PDF files.
 *   **Text Selection:** Allows users to select a specific portion of the text to be read.
+*   **Pause/Resume:** Allows pausing and resuming the speech.
 *   **Reading Progress:**
     *   Displays text in paginated sections, like a book.
     *   Includes an adjustable progress bar to navigate through the text.
